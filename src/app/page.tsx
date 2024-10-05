@@ -2,16 +2,18 @@
 
 import { Character } from '@/types/types';
 import { useEffect, useState } from 'react';
-import CharacterCard from './components/CharacterCard';
 
 export default function Home() {
   const [characters, setCharacters] = useState<Character[]>([]);
+  const [page, setPage] = useState(1);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    setLoading(true);
     const fetchCharacterList = async () => {
       try {
         const res = await fetch(
-          `https://anapioficeandfire.com/api/characters?page=10`
+          `https://anapioficeandfire.com/api/characters?page=${page}`
         );
         const data = await res.json();
 
@@ -30,24 +32,29 @@ export default function Home() {
           };
         });
         const charactersInfo = await Promise.all(fetchDetails);
-        console.log(charactersInfo);
         setCharacters(charactersInfo);
       } catch (error) {
         console.log(error);
+      } finally {
+        setLoading(false);
       }
     };
     fetchCharacterList();
-  }, []);
+  }, [page]);
 
   return (
     <main>
-      <h1 className="text-center font-bold text-3xl my-4 text-white">
-        A Song of Ice and Fire Characters
-      </h1>
-      <ul className="my-5 mx-5 flex flex-wrap">
+      <ul className="my-5 mx-5">
         {characters.map((char) => (
           <li key={char.id} className="my-5">
-            <CharacterCard char={char} />
+            <h1 className="font-semibold">
+              {char.id}. {char.name} - {char.gender}
+            </h1>
+            <ul>
+              {char.houses.map((house, index) => (
+                <li key={index}>{house}</li>
+              ))}
+            </ul>
           </li>
         ))}
       </ul>
