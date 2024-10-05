@@ -2,6 +2,7 @@
 
 import { Character } from '@/types/types';
 import { useEffect, useState } from 'react';
+import CharacterCard from './components/CharacterCard';
 
 export default function Home() {
   const [characters, setCharacters] = useState<Character[]>([]);
@@ -40,17 +41,13 @@ export default function Home() {
 
   return (
     <main>
-      <ul className="my-5 mx-5">
+      <h1 className="text-center font-bold text-3xl my-4 text-white">
+        A Song of Ice and Fire Characters
+      </h1>
+      <ul className="my-5 mx-5 flex flex-wrap">
         {characters.map((char) => (
           <li key={char.id} className="my-5">
-            <h1 className="font-semibold">
-              {char.id}. {char.name} - {char.gender}
-            </h1>
-            <ul>
-              {char.houses.map((house, index) => (
-                <li key={index}>{house}</li>
-              ))}
-            </ul>
+            <CharacterCard char={char} />
           </li>
         ))}
       </ul>
