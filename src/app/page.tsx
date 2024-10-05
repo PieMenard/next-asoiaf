@@ -1,7 +1,9 @@
 'use client';
 
 import { Character } from '@/types/types';
-import { useEffect, useState } from 'react';
+import { use, useEffect, useState } from 'react';
+import CharacterCard from './components/CharacterCard';
+import Pagination from './components/Pagination';
 
 export default function Home() {
   const [characters, setCharacters] = useState<Character[]>([]);
@@ -43,21 +45,22 @@ export default function Home() {
   }, [page]);
 
   return (
-    <main>
-      <ul className="my-5 mx-5">
-        {characters.map((char) => (
-          <li key={char.id} className="my-5">
-            <h1 className="font-semibold">
-              {char.id}. {char.name} - {char.gender}
-            </h1>
-            <ul>
-              {char.houses.map((house, index) => (
-                <li key={index}>{house}</li>
-              ))}
-            </ul>
-          </li>
-        ))}
-      </ul>
+    <main className="text-center">
+      <h1 className="font-bold text-3xl text-white my-4">
+        A Song of Ice and Fire Characters
+      </h1>
+      {loading ? (
+        <p>Loading...</p>
+      ) : (
+        <ul className="my-5 mx-5 flex flex-wrap">
+          {characters.map((char) => (
+            <li key={char.id}>
+              <CharacterCard char={char} />
+            </li>
+          ))}
+        </ul>
+      )}
+      <Pagination page={page} setPage={setPage} />
     </main>
   );
 }

@@ -2,7 +2,7 @@ import { Character } from '@/types/types';
 
 const CharacterCard = ({ char }: { char: Character }) => {
   return (
-    <div className="border-2 w-[280px] h-[350px] mx-5 text-center bg-slate-400 rounded-md">
+    <div className="border-2 w-[280px] h-[350px] mx-5 my-4 text-center bg-slate-400 rounded-md">
       <h1 className="font-semibold my-3">
         {char.id}. {char.name}
       </h1>
