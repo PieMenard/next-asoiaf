@@ -2,8 +2,8 @@
 
 import { Character } from '@/types/types';
 import { use, useEffect, useState } from 'react';
-import CharacterCard from './components/CharacterCard';
-import Pagination from './components/Pagination';
+import CharacterCard from '../components/CharacterCard';
+import Pagination from '../components/Pagination';
 
 export default function Home() {
   const [characters, setCharacters] = useState<Character[]>([]);
