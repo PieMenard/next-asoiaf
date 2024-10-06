@@ -31,8 +31,41 @@ export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const offset = parseInt(searchParams.get('offset') || '0');
   const limit = parseInt(searchParams.get('limit') || '10');
+
+  //search terms
+  const idSearch = searchParams.get('id');
+  const nameSearch = searchParams.get('name');
+  const genderSearch = searchParams.get('gender');
+  const houseSearch = searchParams.get('house');
+
+  const filters: any = {};
+
+  if (idSearch) {
+    filters.id = parseInt(idSearch);
+  }
+
+  if (nameSearch) {
+    filters.name = { contains: nameSearch, mode: 'insensitive' };
+  }
+
+  if (genderSearch) {
+    filters.gender = genderSearch;
+  }
+
+  if (houseSearch) {
+    filters.houses = {
+      some: {
+        name: {
+          contains: houseSearch,
+          mode: 'insensitive',
+        },
+      },
+    };
+  }
+
   try {
     const characters = await prisma.character.findMany({
+      where: filters,
       select: {
         name: true,
         id: true,
@@ -40,6 +73,13 @@ export async function GET(req: NextRequest) {
       skip: offset,
       take: limit,
     });
+
+    if (characters.length === 0) {
+      return NextResponse.json(
+        { success: false, error: 'Not found' },
+        { status: 404 }
+      );
+    }
 
     const results = {
       offset: offset,
