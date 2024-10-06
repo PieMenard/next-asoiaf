@@ -4,6 +4,8 @@ import { Character } from '@/types/types';
 import { use, useEffect, useState } from 'react';
 import CharacterCard from '../components/CharacterCard';
 import Pagination from '../components/Pagination';
+import { CreateHouse } from '@/components/CreateHouse';
+import { Trash2 } from 'lucide-react';
 
 export default function Home() {
   const [characters, setCharacters] = useState<Character[]>([]);
@@ -49,6 +51,7 @@ export default function Home() {
       <h1 className="font-bold text-3xl text-white my-4">
         A Song of Ice and Fire Characters
       </h1>
+      <CreateHouse />
       {loading ? (
         <p>Loading...</p>
       ) : (
