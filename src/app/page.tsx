@@ -1,16 +1,21 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { FormEvent, useEffect, useState } from 'react';
 import CharacterCard from '../components/CharacterCard';
 import Pagination from '../components/Pagination';
 import { CreateHouse } from '@/components/CreateHouse';
 import { CreateCharacter } from '@/components/CreateCharacter';
 import { Character } from '@/types/types';
+import SearchCharacter from '@/components/SearchCharacter';
 
 export default function Home() {
   const [characters, setCharacters] = useState<Character[]>([]);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(true);
+
+  const [query, setQuery] = useState('');
+  const [newSearch, setNewSearch] = useState('');
+
   const fetchCharacterList = async () => {
     try {
       // const res = await fetch(
@@ -34,7 +39,7 @@ export default function Home() {
       // });
       // const charactersInfo = await Promise.all(fetchDetails);
       // setCharacters(charactersInfo);
-      const res = await fetch(`/api/characters`);
+      const res = await fetch(`/api/characters?name=${newSearch}`);
       const data = await res.json();
       setCharacters(data.data.results);
     } catch (error) {
@@ -47,13 +52,23 @@ export default function Home() {
     setLoading(true);
 
     fetchCharacterList();
-  }, [page]);
+  }, [page, newSearch]);
+
+  const handleSearch = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setNewSearch(query);
+  };
 
   return (
     <main className="text-center">
       <h1 className="font-bold text-3xl text-white my-4">
         A Song of Ice and Fire Characters
       </h1>
+      <SearchCharacter
+        query={query}
+        setQuery={setQuery}
+        handleSearch={handleSearch}
+      />
       <CreateHouse />
       <CreateCharacter />
       {loading ? (
