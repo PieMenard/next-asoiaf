@@ -1,7 +1,13 @@
 import { Character } from '@/types/types';
 import DeleteCharacter from './DeleteCharacter';
 
-const CharacterCard = ({ char }: { char: Character }) => {
+const CharacterCard = ({
+  char,
+  refetchCharacters,
+}: {
+  char: Character;
+  refetchCharacters: () => void;
+}) => {
   return (
     <div className="relative border-2 w-[280px] h-[350px] mx-5 my-4 text-center bg-slate-400 rounded-md">
       <h1 className="font-semibold my-3">
@@ -17,7 +23,7 @@ const CharacterCard = ({ char }: { char: Character }) => {
         </ul>
       </div>
       <div className="absolute bottom-0 right-0 m-4">
-        <DeleteCharacter id={char.id} />
+        <DeleteCharacter refetchCharacters={refetchCharacters} id={char.id} />
       </div>
     </div>
   );

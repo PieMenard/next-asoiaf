@@ -1,14 +1,23 @@
 import { Trash2Icon } from 'lucide-react';
 import { Button } from './ui/button';
 
-const DeleteCharacter = ({ id }: { id: number }) => {
+const DeleteCharacter = ({
+  id,
+  refetchCharacters,
+}: {
+  id: number;
+  refetchCharacters: () => void;
+}) => {
   const handleDelete = async () => {
-    const res = await fetch(`/api/characters/${id}`, {
-      method: 'DELETE',
-    });
-    const data = await res.json();
-    if (data.success) {
-      console.log('deleted');
+    if (window.confirm(`Are you sure you want to delete this character?`)) {
+      const res = await fetch(`/api/characters/${id}`, {
+        method: 'DELETE',
+      });
+      const data = await res.json();
+      if (data.success) {
+        refetchCharacters();
+        console.log('deleted');
+      }
     }
   };
   return (
