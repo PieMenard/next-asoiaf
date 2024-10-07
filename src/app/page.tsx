@@ -1,11 +1,11 @@
 'use client';
 
-import { Character } from '@/types/types';
-import { use, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import CharacterCard from '../components/CharacterCard';
 import Pagination from '../components/Pagination';
 import { CreateHouse } from '@/components/CreateHouse';
-import { Trash2 } from 'lucide-react';
+import { CreateCharacter } from '@/components/CreateCharacter';
+import { Character } from '@/types/types';
 
 export default function Home() {
   const [characters, setCharacters] = useState<Character[]>([]);
@@ -16,27 +16,30 @@ export default function Home() {
     setLoading(true);
     const fetchCharacterList = async () => {
       try {
-        const res = await fetch(
-          `https://anapioficeandfire.com/api/characters?page=${page}`
-        );
-        const data = await res.json();
+        // const res = await fetch(
+        //   `https://anapioficeandfire.com/api/characters?page=${page}`
+        // );
+        // const data = await res.json();
 
-        const fetchDetails = data.map(async (char: any) => {
-          const fetchHouses = char.allegiances.map(async (house: any) => {
-            const resHouse = await fetch(house);
-            const houseData = await resHouse.json();
-            return houseData.name;
-          });
-          const houses = await Promise.all(fetchHouses);
-          return {
-            id: char.url.split('/').pop(),
-            name: char.name,
-            houses: houses,
-            gender: char.gender,
-          };
-        });
-        const charactersInfo = await Promise.all(fetchDetails);
-        setCharacters(charactersInfo);
+        // const fetchDetails = data.map(async (char: any) => {
+        //   const fetchHouses = char.allegiances.map(async (house: any) => {
+        //     const resHouse = await fetch(house);
+        //     const houseData = await resHouse.json();
+        //     return houseData.name;
+        //   });
+        //   const houses = await Promise.all(fetchHouses);
+        //   return {
+        //     id: char.url.split('/').pop(),
+        //     name: char.name,
+        //     houses: houses,
+        //     gender: char.gender,
+        //   };
+        // });
+        // const charactersInfo = await Promise.all(fetchDetails);
+        // setCharacters(charactersInfo);
+        const res = await fetch(`/api/characters`);
+        const data = await res.json();
+        setCharacters(data.data.results);
       } catch (error) {
         console.log(error);
       } finally {
@@ -52,6 +55,7 @@ export default function Home() {
         A Song of Ice and Fire Characters
       </h1>
       <CreateHouse />
+      <CreateCharacter />
       {loading ? (
         <p>Loading...</p>
       ) : (

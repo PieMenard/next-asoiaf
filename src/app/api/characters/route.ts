@@ -66,12 +66,11 @@ export async function GET(req: NextRequest) {
   try {
     const characters = await prisma.character.findMany({
       where: filters,
-      select: {
-        name: true,
-        id: true,
-      },
       skip: offset,
       take: limit,
+      include: {
+        houses: true,
+      },
     });
 
     if (characters.length === 0) {

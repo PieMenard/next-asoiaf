@@ -12,20 +12,31 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from './ui/textarea';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import { FormEvent, useRef, useState } from 'react';
+import { House } from 'lucide-react';
+import { Character } from '@prisma/client';
 
-export function CreateHouse() {
+export function CreateCharacter() {
   const formRef = useRef<HTMLFormElement>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
-    words: '',
+    gender: '',
+    houses: '',
   });
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const res = await fetch('api/houses', {
+      const res = await fetch('api/characters', {
         method: 'POST',
         body: JSON.stringify(formData),
       });
@@ -34,7 +45,8 @@ export function CreateHouse() {
         formRef.current?.reset();
         setFormData({
           name: '',
-          words: '',
+          gender: '',
+          houses: '',
         });
       }
     } catch (error) {
@@ -51,12 +63,12 @@ export function CreateHouse() {
             className="bg-slate-300"
             onClick={() => setDialogOpen(true)}
           >
-            Add a House
+            Add a Character
           </Button>
         </DialogTrigger>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
-            <DialogTitle>Create a new House</DialogTitle>
+            <DialogTitle>Create a new Character</DialogTitle>
           </DialogHeader>
           <form onSubmit={handleSubmit}>
             <div className="grid gap-4 py-4">
@@ -69,22 +81,37 @@ export function CreateHouse() {
                   onChange={(e) =>
                     setFormData({ ...formData, name: e.target.value })
                   }
-                  //   defaultValue="Pedro Duarte"
+                  //   defaultValue={currentCharacter.name}
                   value={formData.name}
                   className="col-span-3"
                 />
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="words" className="text-right">
-                  Motto
+                <Label htmlFor="gender" className="text-right">
+                  Gender
                 </Label>
-                <Textarea
-                  name="words"
+                <Input
+                  name="gender"
                   onChange={(e) =>
-                    setFormData({ ...formData, words: e.target.value })
+                    setFormData({ ...formData, gender: e.target.value })
                   }
-                  //   defaultValue="@peduarte"
-                  value={formData.words}
+                  //   defaultValue={currentCharacter.gender}
+                  value={formData.gender}
+                  className="col-span-3"
+                />
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="username" className="text-right">
+                  Houses
+                </Label>
+                <Input
+                  name="house"
+                  onChange={(e) =>
+                    setFormData({ ...formData, houses: e.target.value })
+                  }
+                  //   defaultValue={currentCharacter.gender}
+                  placeholder="1,2"
+                  value={formData.houses}
                   className="col-span-3"
                 />
               </div>

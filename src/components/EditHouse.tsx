@@ -13,8 +13,9 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from './ui/textarea';
 import { FormEvent, useRef, useState } from 'react';
+import { House } from '@prisma/client';
 
-export function CreateHouse() {
+export function EditHouse({ house }: { house: House }) {
   const formRef = useRef<HTMLFormElement>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [formData, setFormData] = useState({
@@ -75,11 +76,11 @@ export function CreateHouse() {
                 />
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="words" className="text-right">
+                <Label htmlFor="username" className="text-right">
                   Motto
                 </Label>
                 <Textarea
-                  name="words"
+                  name="username"
                   onChange={(e) =>
                     setFormData({ ...formData, words: e.target.value })
                   }
