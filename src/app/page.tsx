@@ -18,6 +18,7 @@ export default function Home() {
 
   const fetchCharacterList = async () => {
     try {
+      setLoading(true);
       // const res = await fetch(
       //   `https://anapioficeandfire.com/api/characters?page=${page}`
       // );
@@ -41,7 +42,9 @@ export default function Home() {
       // setCharacters(charactersInfo);
       const res = await fetch(`/api/characters?name=${newSearch}`);
       const data = await res.json();
-      setCharacters(data.data.results);
+      if (data.success) {
+        setCharacters(data.data.results);
+      } else setCharacters([]);
     } catch (error) {
       console.log(error);
     } finally {
@@ -49,14 +52,13 @@ export default function Home() {
     }
   };
   useEffect(() => {
-    setLoading(true);
-
     fetchCharacterList();
   }, [page, newSearch]);
 
   const handleSearch = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setNewSearch(query);
+    setPage(1);
   };
 
   return (
@@ -74,16 +76,22 @@ export default function Home() {
       {loading ? (
         <p>Loading...</p>
       ) : (
-        <ul className="my-5 mx-5 flex flex-wrap">
-          {characters.map((char) => (
-            <li key={char.id}>
-              <CharacterCard
-                char={char}
-                refetchCharacters={fetchCharacterList}
-              />
-            </li>
-          ))}
-        </ul>
+        <>
+          {characters.length === 0 ? (
+            <p>No results </p>
+          ) : (
+            <ul className="my-5 mx-5 flex flex-wrap">
+              {characters.map((char) => (
+                <li key={char.id}>
+                  <CharacterCard
+                    char={char}
+                    refetchCharacters={fetchCharacterList}
+                  />
+                </li>
+              ))}
+            </ul>
+          )}
+        </>
       )}
       <Pagination page={page} setPage={setPage} />
     </main>
